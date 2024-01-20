@@ -1,0 +1,22 @@
+{
+    "name": "go",
+    "build": {
+        "context": "..",
+        "dockerfile": "Dockerfile"
+    },
+    "forwardPorts": [8080],
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-azuretools.vscode-docker",
+                "garytyler.darcula-pycharm",
+                "mhutchie.git-graph",
+                "github.copilot",
+                "visualstudioexptteam.vscodeintellicode",
+                "christian-kohler.path-intellisense",
+                "shardulm94.trailing-spaces",
+                "golang.go"
+            ]
+        }
+    }
+}
