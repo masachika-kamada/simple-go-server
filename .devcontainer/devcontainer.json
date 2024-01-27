@@ -1,10 +1,12 @@
 {
-    "name": "go",
-    "build": {
-        "context": "..",
-        "dockerfile": "Dockerfile"
-    },
-    "forwardPorts": [8080],
+    "name": "go and node.js",
+    "dockerComposeFile": "docker-compose.yaml",
+    "service": "go",
+    "workspaceFolder": "/workspace",
+    "forwardPorts": [
+        8080,
+        3000
+    ],
     "customizations": {
         "vscode": {
             "extensions": [

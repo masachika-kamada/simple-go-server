@@ -1,0 +1,19 @@
+version: "3.8"
+services:
+  go:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    volumes:
+      - ../backend:/workspace
+    ports:
+      - "8080:8080"
+
+  node:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ../frontend:/workspace
+    ports:
+      - "3000:3000"
