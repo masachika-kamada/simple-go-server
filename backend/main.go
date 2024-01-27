@@ -3,6 +3,7 @@ package main
 import (
     "fmt"
     "net/http"
+    "encoding/json"
 )
 
 func main() {
@@ -23,8 +24,17 @@ func aboutHandler(w http.ResponseWriter, r *http.Request) {
     fmt.Fprintf(w, "Your User-Agent is: %s", userAgent)
 }
 
+func setupCORS(w *http.ResponseWriter) {
+    (*w).Header().Set("Access-Control-Allow-Origin", "*")
+    (*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+    (*w).Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+}
+
 func contactHandler(w http.ResponseWriter, r *http.Request) {
-    if r.Method == "POST" {
+    setupCORS(&w)
+    if r.Method == "GET" {
+        json.NewEncoder(w).Encode(map[string]string{"message": "Hello from Go server"})
+    } else if r.Method == "POST" {
         // POSTリクエストの場合の処理
         r.ParseForm()
         message := r.FormValue("message")
