@@ -32,20 +32,19 @@ func setupCORS(w *http.ResponseWriter) {
 
 func contactHandler(w http.ResponseWriter, r *http.Request) {
     setupCORS(&w)
-    if r.Method == "GET" {
+    switch r.Method {
+    case "GET":
+        // GET リクエストの処理
         json.NewEncoder(w).Encode(map[string]string{"message": "Hello from Go server"})
-    } else if r.Method == "POST" {
-        // POSTリクエストの場合の処理
-        r.ParseForm()
-        message := r.FormValue("message")
-        fmt.Fprintf(w, "Received message: %s", message)
-    } else {
-        // GETリクエストの場合の処理（フォームを表示）
-        fmt.Fprintf(w, `<h1>Contact Us</h1>
-        <form action="/contact" method="post">
-            <label for="message">Message:</label>
-            <input type="text" id="message" name="message">
-            <input type="submit" value="Send">
-        </form>`)
+    case "POST":
+        // POST リクエストの処理
+        var data struct {
+            Message string `json:"message"`
+        }
+        if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
+            http.Error(w, err.Error(), http.StatusBadRequest)
+            return
+        }
+        fmt.Fprintf(w, "Received POST message: %s", data.Message)
     }
 }
