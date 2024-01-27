@@ -2,32 +2,37 @@ import React, { useState } from "react";
 import "./App.css";
 
 function App() {
-  const [message, setMessage] = useState("");
-  const [response, setResponse] = useState("");
+  const [inputMessage, setInputMessage] = useState("");
+  const [responseMessage, setResponseMessage] = useState("");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const response = await fetch("http://localhost:8080/contact", {
+    const response = await fetch("http://localhost:8080/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message }),
+      body: JSON.stringify({ message: inputMessage }),
     });
     const responseData = await response.text();
-    setResponse(responseData);
+    setResponseMessage(responseData);
   };
 
   return (
     <div className="App">
       <header className="App-header">
+        <p>Enter a message, and we'll convert it to uppercase</p>
         <form onSubmit={handleSubmit}>
           <input
             type="text"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            value={inputMessage}
+            onChange={(e) => setInputMessage(e.target.value)}
+            style={{ fontSize: "30px", margin: "10px" }}
           />
-          <button type="submit">Send</button>
+          <button type="submit" style={{ fontSize: "30px" }}>Submit</button>
         </form>
-        <p>Response from Go server: {response}</p>
+        <p style={{ textAlign: "left" }}>
+          <strong>Sent message:</strong> {inputMessage}<br />
+          <strong>Response from Go server:</strong> {responseMessage}
+        </p>
       </header>
     </div>
   );

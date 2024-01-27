@@ -1,27 +1,15 @@
 package main
 
 import (
+    "encoding/json"
     "fmt"
     "net/http"
-    "encoding/json"
+    "strings"
 )
 
 func main() {
-    http.HandleFunc("/", rootHandler)
-    http.HandleFunc("/about", aboutHandler)
-    http.HandleFunc("/contact", contactHandler)
+    http.HandleFunc("/", messageHandler) // ルートパスで処理
     http.ListenAndServe(":8080", nil)
-}
-
-func rootHandler(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprintf(w, `<h1>Welcome to the Go Web Server</h1>
-    <p><a href="/about">About Us</a></p>
-    <p><a href="/contact">Contact Us</a></p>`)
-}
-
-func aboutHandler(w http.ResponseWriter, r *http.Request) {
-    userAgent := r.Header.Get("User-Agent")
-    fmt.Fprintf(w, "Your User-Agent is: %s", userAgent)
 }
 
 func setupCORS(w *http.ResponseWriter) {
@@ -30,14 +18,9 @@ func setupCORS(w *http.ResponseWriter) {
     (*w).Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 }
 
-func contactHandler(w http.ResponseWriter, r *http.Request) {
+func messageHandler(w http.ResponseWriter, r *http.Request) {
     setupCORS(&w)
-    switch r.Method {
-    case "GET":
-        // GET リクエストの処理
-        json.NewEncoder(w).Encode(map[string]string{"message": "Hello from Go server"})
-    case "POST":
-        // POST リクエストの処理
+    if r.Method == "POST" {
         var data struct {
             Message string `json:"message"`
         }
@@ -45,6 +28,7 @@ func contactHandler(w http.ResponseWriter, r *http.Request) {
             http.Error(w, err.Error(), http.StatusBadRequest)
             return
         }
-        fmt.Fprintf(w, "Received POST message: %s", data.Message)
+        processedMessage := strings.ToUpper(data.Message) // メッセージを大文字に変換
+        fmt.Fprintf(w, processedMessage)
     }
 }
